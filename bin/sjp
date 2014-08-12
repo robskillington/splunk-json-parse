@@ -1,0 +1,24 @@
+#!/usr/bin/env node
+
+var argv = require('yargs')
+  .usage('Parse exported Splunk JSON into native JSON for analysis.\nUsage: sjp -f filein -o fileout')
+  .example('sjp -f inputfile.json -o outputfile.json', 'parse the Splunk JSON from a given inputfile.json and output to outputfile.json')
+  .demand('f')
+  .demand('o')
+  .alias('f', 'file')
+  .alias('o', 'outputfile')
+  .describe('f', 'Exported Splunk JSON file')
+  .describe('o', 'Output parsed JSON file')
+  .argv;
+
+var SplunkJSONParser = require('../lib');
+
+var parser = new SplunkJSONParser();
+parser.parse(argv.file, argv.outputfile, function (err) {
+  if (err) {
+    SplunkJSONParser.error('Error occurred: ' + err.message);
+    SplunkJSONParser.error(err.stack);
+  } else {
+    SplunkJSONParser.info('wrote "' + argv.outputfile + '"');
+  }
+});

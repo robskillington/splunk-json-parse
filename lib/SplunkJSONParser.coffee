@@ -1,5 +1,5 @@
 fs = require 'fs'
-Lazy = require 'lazy'
+lazy = require 'lazy'
 
 
 class SplunkJSONParser
@@ -40,14 +40,15 @@ class SplunkJSONParser
     if !reader
       return callback new Error('Unable to open file for reading')
 
-    cls.info 'reading & parsing lines'
+    klass.info 'reading & parsing lines'
 
-    entries = Lazy(reader).lines
-      .map((line) => @parseLine line)
+    lazy(reader)
+      .lines
+      .map((line) => @parseLine(line))
       .filter((entry) => Boolean(entry))
       .map((entry) => JSON.stringify(entry))
       .join (strings) =>
-        cls.info 'writing output'
+        klass.info 'writing output'
 
         writer.write "[#{strings.join(',')}]", 'utf8', (err) ->
           if err
@@ -58,7 +59,7 @@ class SplunkJSONParser
 
   parseLine: (line) ->
     # Only parse lines with content
-    trimmed = cls.trimLine line
+    trimmed = klass.trimLine line
     return null if !trimmed || trimmed.length < 1
 
     # Don't parse the splunk "lastrow" entry
@@ -102,7 +103,7 @@ class SplunkJSONParser
             value = value[4...-4]
 
         # Strip and replace escaped quotes
-        while (stripped = cls.stripSlashes(value)) != value
+        while (stripped = klass.stripSlashes(value)) != value
           value = stripped
         value = value.replace /\"/g, '"'
 
@@ -119,4 +120,4 @@ class SplunkJSONParser
     return parsed
 
 
-module.exports = cls = SplunkJSONParser
+module.exports = klass = SplunkJSONParser

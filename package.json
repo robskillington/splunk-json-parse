@@ -1,6 +1,6 @@
 {
   "name": "sjp",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Parse Splunk JSON export into native JSON for analysis with JQ or your own favorite JSON toolchain",
   "main": "./lib/index.js",
   "directories": {
